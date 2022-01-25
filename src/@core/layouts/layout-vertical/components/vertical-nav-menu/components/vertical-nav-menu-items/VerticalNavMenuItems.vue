@@ -1,0 +1,45 @@
+<template>
+  <ul v-if="true">
+    <component
+      :is="resolveNavItemComponent(item)"
+      v-for="item in items"
+      :key="item.header"
+      :item="item"
+    />
+  </ul>
+</template>
+
+<script>
+import { resolveVerticalNavMenuItemComponent as resolveNavItemComponent } from '@core/layouts/utils'
+import { provide, ref } from '@vue/composition-api'
+import VerticalNavMenuHeader from '../vertical-nav-menu-header'
+import VerticalNavMenuLink from '../vertical-nav-menu-link/VerticalNavMenuLink.vue'
+import VerticalNavMenuGroup from '../vertical-nav-menu-group/VerticalNavMenuGroup.vue'
+
+export default {
+  components: {
+    VerticalNavMenuHeader,
+    VerticalNavMenuLink,
+    VerticalNavMenuGroup,
+  },
+  props: {
+    items: {
+      type: Array,
+      required: true,
+    },
+  },
+  computed: {
+    role() {
+      return 'name'
+      // return this.$store.state.auth.userInfo.role.name
+    },
+  },
+  setup() {
+    provide('openGroups', ref([]))
+
+    return {
+      resolveNavItemComponent,
+    }
+  },
+}
+</script>
