@@ -3,74 +3,52 @@
     <b-card-group deck>
       <b-card
         header-tag="header"
-        title="إضافة مكتبة"
+        title="إضافة محتوى جديد"
       >
         <validation-observer ref="categoryRules">
           <b-form>
             <b-row>
               <!-- name -->
-              <b-col md="8">
+              <b-col md="6">
                 <b-form-group
-                  label="عنوان الكتاب"
-                  label-for="name"
+                  label="عنوان المحتوى"
+                  label-for="title"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="name"
+                    name="title"
                     rules="required"
                   >
                     <b-form-input
                       id="name"
-                      v-model="name"
+                      v-model="title"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="عنوان الكتاب"
+                      placeholder="عنوان المحتوى"
                     />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group
-                  label="اسم الموديول"
-                  label-for="module"
-                >
-                  <validation-provider
-                    #default="{ errors }"
-                    name="module"
-                    rules="required"
-                  >
-                    <b-form-select
-                      id="module"
-                      v-model="moduleId"
-                      placeholder="اختار الاختبار"
-                      value-field="id"
-                      text-field="name"
-                      :options="modules"
-                      :state="errors.length > 0 ? false : null"
-                    />
-
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
               </b-col>
               <b-col md="6">
                 <b-form-group
-                  label="رفع الملف"
-                  label-for="image"
+                  label="اخر الموديول"
+                  label-for="moduleId"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="file"
+                    name="moduleId"
                     rules="required"
                   >
-                    <b-form-file
-                      id="file"
-                      v-model="imageCat"
-                      type="file"
+                    <b-form-select
+                      id="moduleId"
+                      v-model="moduleId"
+                      placeholder="اختار الموديول"
+                      value-field="id"
+                      text-field="name"
+                      :options="modules"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="الملف"
-                      @change="fileCategory"
                     />
+
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
@@ -87,7 +65,7 @@
                     icon="PlusIcon"
                     class="mr-25"
                   />
-                  إضافة ملف للمكتبة
+                  إضافة محتوى
                 </b-button>
               </b-col>
             </b-row>
@@ -100,33 +78,31 @@
 
 <script>
 import { ValidationProvider, ValidationObserver, localize } from 'vee-validate'
-import { required } from '@/@core/utils/validations/validations'
+import { required } from '@core/utils/validations/validations'
 import {
   BCard,
   BCardGroup,
   BButton,
   BFormInput,
   BFormGroup,
+  BFormSelect,
   BForm,
   BRow,
   BCol,
-  BFormFile,
-  BFormSelect,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 const dictionary = {
   ar: {
     names: {
-      name: 'اسم القسم',
-      module: 'اختر الموديول',
-      file: 'يجب اختيار الملف',
+      title: 'عنوان المحتوى',
+      moduleId: 'الموديول',
     },
   },
 }
 localize('ar', dictionary.ar)
 export default {
-  name: 'AddCategory',
+  name: 'AddContent',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -135,18 +111,17 @@ export default {
     BButton,
     BFormInput,
     BFormGroup,
+    BFormSelect,
     BForm,
     BRow,
     BCol,
-    BFormFile,
-    BFormSelect,
   },
   data() {
     return {
       modules: [],
-      category_file: null,
       moduleId: null,
-      name: null,
+      category_file: null,
+      title: '',
       points: '',
       image: null,
       imageCat: null,
@@ -154,54 +129,32 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('modules/fetchNames').then(cats => {
-      this.modules = cats.data.data
-    })
+    this.fetchModules()
   },
   methods: {
     validationForm() {
       const formData = new FormData()
-      formData.append('title', this.name)
-      formData.append('file', this.category_file)
       formData.append('module_id', this.moduleId)
-      console.log(formData)
+      formData.append('title', this.title)
       this.$refs.categoryRules.validate().then(success => {
         if (success) {
-          this.$store.dispatch('library/store', formData).then(() => {
-            this.name = ''
-            this.imageCat = null
-            this.moduleId = null
-            this.$refs.categoryRules.reset()
+          this.$store.dispatch('content/store', formData).then(() => {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: 'تم إضافة الملف في المكتبة بنجاح',
+                title: 'تم إضافة المحتوى بنجاح',
                 icon: 'CheckCircleIcon',
                 variant: 'success',
               },
             })
           })
+          this.$router.push('all-content')
         }
       })
     },
-    validationFormSub() {
-      const formData = new FormData()
-      formData.append('name', this.nameSub)
-      formData.append('category_id', this.mainCatId)
-      this.$refs.simpleRules.validate().then(success => {
-        console.log(formData)
-        if (success) {
-          this.$store.dispatch('subCategories/store', formData).then(() => {
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة القسم بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
-          })
-        }
+    fetchModules() {
+      this.$store.dispatch('modules/fetchNames').then(res => {
+        this.modules = res.data.data
       })
     },
     fileCategory(event) {

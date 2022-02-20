@@ -60,6 +60,66 @@ export default [
     ],
   },
   {
+    title: 'الانشطة',
+    icon: 'FolderMinusIcon',
+    role: 'admin',
+    children: [
+      {
+        title: 'إضافة نشاط',
+        route: 'add-activities',
+      },
+      {
+        title: 'كافة الانشطة',
+        route: 'all-activities',
+      },
+    ],
+  },
+  {
+    title: 'محتوى',
+    icon: 'FolderMinusIcon',
+    role: 'admin',
+    children: [
+      {
+        title: 'إضافة محتوى',
+        route: 'add-content',
+      },
+      {
+        title: 'كافة المحتويات',
+        route: 'all-content',
+      },
+    ],
+  },
+  {
+    title: 'النقاط',
+    icon: 'FolderMinusIcon',
+    role: 'admin',
+    children: [
+      {
+        title: 'إضافة نقطة',
+        route: 'add-point',
+      },
+      {
+        title: 'كافة النقاط',
+        route: 'all-point',
+      },
+    ],
+  },
+  {
+    title: 'الروابط',
+    icon: 'FolderMinusIcon',
+    role: 'admin',
+    children: [
+      {
+        title: 'إضافة رابط',
+        route: 'add-link',
+      },
+      {
+        title: 'كافة الروابط',
+        route: 'all-link',
+      },
+    ],
+  },
+  {
     title: 'الاسئة',
     route: 'second-page',
     icon: 'HelpCircleIcon',
@@ -100,7 +160,7 @@ export default [
     role: 'admin',
     children: [
       {
-        title: 'انشاء مكتبة',
+        title: 'إضافة كتاب جديد',
         route: 'libraries-create',
       },
       {
@@ -126,124 +186,29 @@ export default [
   //   ],
   // },
   {
-    title: 'الادمن',
-    route: 'admins',
+    title: 'الطلاب',
+    route: 'students',
     icon: 'UserIcon',
     role: 'admin',
   },
   // {
-  //   title: 'الرسائل',
-  //   route: 'messages',
-  //   icon: 'MessageCircleIcon',
-  //   role: 'admin',
-  // },
-  // {
-  //   title: 'المصانع',
-  //   icon: 'SettingsIcon',
-  //   role: 'admin',
-  //   children: [
-  //     {
-  //       title: 'انشاء مصنع جديد',
-  //       route: 'factoryCreate',
-  //     },
-  //     {
-  //       title: 'مصانع جديدة',
-  //       route: 'factories',
-  //     },
-  //     {
-  //       title: 'مصانع مفعلة',
-  //       route: 'factoriesActive',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'مقيِّم ضباط الجودة',
-  //   route: 'quality-evaluator',
+  //   title: 'الادمن',
+  //   route: 'admins',
   //   icon: 'UserIcon',
   //   role: 'admin',
-  //   children: [
-  //     {
-  //       title: 'انشاء حساب مقيم الجودة',
-  //       route: 'quality-evaluator-create',
-  //     },
-  //     {
-  //       title: 'مقيم ضبط الجودة جديد',
-  //       route: 'quality-evaluator-new',
-  //     },
-  //     {
-  //       title: 'مقيم ضبط الجودة مفعل',
-  //       route: 'quality-evaluator-active',
-  //     },
-  //   ],
   // },
-  // {
-  //   title: 'الشكوى والتقاريير',
-  //   route: 'reports.all',
-  //   icon: 'HelpCircleIcon',
-  //   role: 'admin',
-  // },
-  // {
-  //   title: 'سلايدر',
-  //   route: 'sliders.all',
-  //   icon: 'SlidersIcon',
-  //   role: 'admin',
-  // },
-  {
-    title: 'الإعدادات',
-    icon: 'SettingsIcon',
-    route: 'setting.all',
-    role: 'admin',
-  },
 
-  /**
-   *  Factory Section
-   */
   // {
-  //   title: 'طلبات الشركة',
-  //   icon: 'UserIcon',
-  //   role: 'company',
-  //   children: [
-  //     {
-  //       title: 'الطلبات الجديدة',
-  //       route: 'exam.new_order',
-  //     },
-  //     {
-  //       title: 'الطلبات المكتملة',
-  //       route: 'exam.complete_order',
-  //     },
-  //   ],
+  //   title: 'الإعدادات',
+  //   icon: 'SettingsIcon',
+  //   route: 'setting.all',
+  //   role: 'admin',
   // },
-  // {
-  //   title: 'طلبات المصنع',
-  //   icon: 'UserIcon',
-  //   role: 'exam',
-  //   children: [
-  //     {
-  //       title: 'الطلبات الجديدة',
-  //       route: 'exam.new_order',
-  //     },
-  //     {
-  //       title: 'الطلبات المكتملة',
-  //       route: 'exam.complete_order',
-  //     },
-  //   ],
-  // },
+
   {
     title: 'تسجيل الخروج',
     route: 'login',
     icon: 'LogOutIcon',
     role: 'admin',
   },
-  // {
-  //   title: 'تسجيل الخروج',
-  //   route: 'login',
-  //   icon: 'LogOutIcon',
-  //   role: 'exam',
-  // },
-  // {
-  //   title: 'تسجيل الخروج',
-  //   route: 'login',
-  //   icon: 'LogOutIcon',
-  //   role: 'company',
-  // },
 ]

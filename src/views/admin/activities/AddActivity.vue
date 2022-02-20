@@ -3,46 +3,25 @@
     <b-card-group deck>
       <b-card
         header-tag="header"
-        title="إضافة مكتبة"
+        title="إضافة نشاط للموديول"
       >
         <validation-observer ref="categoryRules">
           <b-form>
             <b-row>
-              <!-- name -->
-              <b-col md="8">
+              <b-col md="6">
                 <b-form-group
-                  label="عنوان الكتاب"
-                  label-for="name"
+                  label="اخر الموديول"
+                  label-for="moduleId"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="name"
-                    rules="required"
-                  >
-                    <b-form-input
-                      id="name"
-                      v-model="name"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="عنوان الكتاب"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <b-col md="4">
-                <b-form-group
-                  label="اسم الموديول"
-                  label-for="module"
-                >
-                  <validation-provider
-                    #default="{ errors }"
-                    name="module"
+                    name="moduleId"
                     rules="required"
                   >
                     <b-form-select
-                      id="module"
+                      id="moduleId"
                       v-model="moduleId"
-                      placeholder="اختار الاختبار"
+                      placeholder="اختار الموديول"
                       value-field="id"
                       text-field="name"
                       :options="modules"
@@ -55,27 +34,49 @@
               </b-col>
               <b-col md="6">
                 <b-form-group
-                  label="رفع الملف"
+                  label="إدارج صورة للنشاط"
                   label-for="image"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="file"
-                    rules="required"
+                    name="image"
+                    rules=""
                   >
                     <b-form-file
-                      id="file"
+                      id="image"
                       v-model="imageCat"
-                      type="file"
+                      type="image"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="الملف"
+                      placeholder="صورة لللنشاط"
                       @change="fileCategory"
                     />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
               </b-col>
-
+              <!-- description -->
+              <b-col md="12">
+                <b-form-group
+                  label="الوصف"
+                  label-for="description"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="description"
+                    rules="required"
+                  >
+                    <b-form-textarea
+                      id="summary"
+                      v-model="comment"
+                      :state="errors.length > 0 ? false : null"
+                      placeholder="الرجاء كتابة وصف الموديول"
+                      rows="5"
+                      max-rows="10"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
               <!-- create button -->
               <b-col cols="12">
                 <b-button
@@ -87,7 +88,7 @@
                     icon="PlusIcon"
                     class="mr-25"
                   />
-                  إضافة ملف للمكتبة
+                  إضافة نشاط
                 </b-button>
               </b-col>
             </b-row>
@@ -105,22 +106,22 @@ import {
   BCard,
   BCardGroup,
   BButton,
-  BFormInput,
   BFormGroup,
   BForm,
   BRow,
   BCol,
   BFormFile,
   BFormSelect,
+  BFormTextarea,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 const dictionary = {
   ar: {
     names: {
-      name: 'اسم القسم',
-      module: 'اختر الموديول',
-      file: 'يجب اختيار الملف',
+      moduleId: 'اسم الموديول',
+      image: 'صورة النشاط',
+      comment: 'وصف النشاط',
     },
   },
 }
@@ -133,75 +134,53 @@ export default {
     BCard,
     BCardGroup,
     BButton,
-    BFormInput,
     BFormGroup,
     BForm,
     BRow,
     BCol,
     BFormFile,
     BFormSelect,
+    BFormTextarea,
   },
   data() {
     return {
       modules: [],
-      category_file: null,
       moduleId: null,
-      name: null,
-      points: '',
+      category_file: null,
+      comment: '',
       image: null,
       imageCat: null,
       required,
     }
   },
   created() {
-    this.$store.dispatch('modules/fetchNames').then(cats => {
-      this.modules = cats.data.data
-    })
+    this.fetchModules()
   },
   methods: {
     validationForm() {
       const formData = new FormData()
-      formData.append('title', this.name)
-      formData.append('file', this.category_file)
       formData.append('module_id', this.moduleId)
-      console.log(formData)
+      formData.append('comment', this.comment)
+      formData.append('file', this.category_file)
       this.$refs.categoryRules.validate().then(success => {
         if (success) {
-          this.$store.dispatch('library/store', formData).then(() => {
-            this.name = ''
-            this.imageCat = null
-            this.moduleId = null
-            this.$refs.categoryRules.reset()
+          this.$store.dispatch('activities/store', formData).then(() => {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: 'تم إضافة الملف في المكتبة بنجاح',
+                title: 'تم إضافة النشاط بنجاح',
                 icon: 'CheckCircleIcon',
                 variant: 'success',
               },
             })
           })
+          this.$router.push('all-activities')
         }
       })
     },
-    validationFormSub() {
-      const formData = new FormData()
-      formData.append('name', this.nameSub)
-      formData.append('category_id', this.mainCatId)
-      this.$refs.simpleRules.validate().then(success => {
-        console.log(formData)
-        if (success) {
-          this.$store.dispatch('subCategories/store', formData).then(() => {
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة القسم بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
-          })
-        }
+    fetchModules() {
+      this.$store.dispatch('modules/fetchNames').then(res => {
+        this.modules = res.data.data
       })
     },
     fileCategory(event) {

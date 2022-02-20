@@ -3,7 +3,7 @@
     <b-card-group deck>
       <b-card
         header-tag="header"
-        title=""
+        title="إضافة نقطة جديد"
       >
         <validation-observer ref="simpleRules">
           <b-form
@@ -60,10 +60,31 @@
                 </b-form-group>
               </b-col>
               <hr class="w-100">
+              <!-- name -->
+              <b-col md="6">
+                <b-form-group
+                  label="اسم النقطة"
+                  label-for="title"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="title"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="name"
+                      v-model="title"
+                      :state="errors.length > 0 ? false : null"
+                      placeholder="اسم الموديول"
+                    />
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
               <!-- Points -->
               <b-col md="12">
                 <b-form-group
-                  label="الاهداف"
+                  label="الوصف"
                   label-for="description"
                 >
                   <validation-provider
@@ -72,72 +93,10 @@
                     rules="required"
                   >
                     <ckeditor
-                      v-model="objectives"
+                      v-model="description"
                       :editor="editor"
                       :config="editorConfig"
                     />
-
-                    <!--                    <b-form-textarea-->
-                    <!--                      id="objectives"-->
-                    <!--                      v-model="objectives"-->
-                    <!--                      :state="errors.length > 0 ? false : null"-->
-                    <!--                      placeholder="الرجاء كتابة الاهداف"-->
-                    <!--                      rows="5"-->
-                    <!--                    />-->
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <!-- Points -->
-              <b-col md="12">
-                <b-form-group
-                  label="المحتوى"
-                  label-for="description"
-                >
-                  <validation-provider
-                    #default="{ errors }"
-                    name="content"
-                    rules="required"
-                  >
-                    <ckeditor
-                      v-model="content"
-                      :editor="editor"
-                      :config="editorConfig"
-                    />
-                    <!--                    <b-form-textarea-->
-                    <!--                      id="content"-->
-                    <!--                      v-model="content"-->
-                    <!--                      :state="errors.length > 0 ? false : null"-->
-                    <!--                      placeholder="الرجاء كتابة المحتوى"-->
-                    <!--                      rows="5"-->
-                    <!--                    />-->
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-              <!-- Points -->
-              <b-col md="12">
-                <b-form-group
-                  label="الملخص"
-                  label-for="description"
-                >
-                  <validation-provider
-                    #default="{ errors }"
-                    name="summary"
-                    rules="required"
-                  >
-                    <ckeditor
-                      v-model="summary"
-                      :editor="editor"
-                      :config="editorConfig"
-                    />
-                    <!--                    <b-form-textarea-->
-                    <!--                      id="summary"-->
-                    <!--                      v-model="summary"-->
-                    <!--                      :state="errors.length > 0 ? false : null"-->
-                    <!--                      placeholder="الرجاء كتابة الملاحظة"-->
-                    <!--                      rows="5"-->
-                    <!--                    />-->
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
@@ -156,7 +115,7 @@
                   icon="PlusIcon"
                   class="mr-25"
                 />
-                إضافة محتوى للموديول
+                إضافة نقطة للموديول
               </b-button>
             </b-col>
           </b-row>
@@ -168,8 +127,7 @@
 
 <script>
 import { ValidationProvider, ValidationObserver, localize } from 'vee-validate'
-import { numeric, required } from '@/@core/utils/validations/validations'
-// import { required } from '@validations'
+import { required } from '@core/utils/validations/validations'
 import {
   BCard,
   BCardGroup,
@@ -179,30 +137,26 @@ import {
   BRow,
   BCol,
   BFormSelect,
+  BFormInput,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // Import translations for the German language.
 import '@ckeditor/ckeditor5-build-classic/build/translations/ar'
 
-// import Image from '@ckeditor/ckeditor5-image/src/image'
-// import ImageResizeEditing from '@ckeditor/ckeditor5-image/src/imageresize/imageresizeediting'
-// import ImageResizeHandles from '@ckeditor/ckeditor5-image/src/imageresize/imageresizehandles'
-
 const dictionary = {
   ar: {
     names: {
-      title: 'السؤال',
-      answer: 'إجابة السؤال',
-      points: 'درجة السؤال',
-      name: 'اسم الاختبار',
+      title: 'اسم النقطة',
+      description: 'وصف النقطة',
+      image: 'صورة القسم',
+      point: 'قيمة النقط',
     },
   },
 }
 localize('ar', dictionary.ar)
-
 export default {
-  name: 'AddModuleData',
+  name: 'AddPoint',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -211,6 +165,7 @@ export default {
     BButton,
     BFormGroup,
     BFormSelect,
+    BFormInput,
     BForm,
     BRow,
     BCol,
@@ -226,16 +181,13 @@ export default {
       moduleId: null,
       categories: [],
       categoryId: null,
-      inputs: [{
-        answer: '',
-        points: '',
-      }],
-      objectives: '',
-      content: '',
-      summary: '',
-      options: [],
+      category_file: null,
+      title: '',
+      description: '',
+      points: '',
+      image: null,
+      imageCat: null,
       required,
-      numeric,
     }
   },
   created() {
@@ -243,6 +195,28 @@ export default {
     this.fetchCategories()
   },
   methods: {
+    validationForm() {
+      const formData = new FormData()
+      formData.append('content_id', this.moduleId)
+      formData.append('category_id', this.categoryId)
+      formData.append('title', this.title)
+      formData.append('description', this.description)
+      this.$refs.simpleRules.validate().then(success => {
+        if (success) {
+          this.$store.dispatch('point/store', formData).then(() => {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'تم إضافة نقطة بنجاح',
+                icon: 'CheckCircleIcon',
+                variant: 'success',
+              },
+            })
+          })
+          this.$router.push('all-point')
+        }
+      })
+    },
     fetchModules() {
       this.$store.dispatch('modules/fetchNames').then(res => {
         this.modules = res.data.data
@@ -253,52 +227,12 @@ export default {
         this.categories = res.data.data
       })
     },
-    add() {
-      this.inputs.push({
-        answer: '',
-        points: '',
-      })
-      this.$nextTick(() => {
-        this.trAddHeight(this.$refs.row[0].offsetHeight)
-      })
-    },
-    remove(index) {
-      this.inputs.splice(index, 1)
-      this.trTrimHeight(this.$refs.row[0].offsetHeight)
-    },
-    initTrHeight() {
-      this.trSetHeight(null)
-      this.$nextTick(() => {
-        this.trSetHeight(this.$refs.form.scrollHeight)
-      })
-    },
-    validationForm() {
-      this.$refs.simpleRules.validate().then(success => {
-        if (success) {
-          const formData = new FormData()
-          formData.append('module_id', this.moduleId)
-          formData.append('category_id', this.categoryId)
-          formData.append('objectives', this.objectives)
-          formData.append('content', this.content)
-          formData.append('summary', this.summary)
-
-          this.$store.dispatch('modulesData/store', formData).then(() => {
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة المحتوى للموديول بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
-            // this.$router.push(`/questions/${this.examId}`)
-          })
-        }
-      })
+    fileCategory(event) {
+      // eslint-disable-next-line prefer-destructuring
+      this.category_file = event.target.files[0]
     },
   },
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style scoped></style>

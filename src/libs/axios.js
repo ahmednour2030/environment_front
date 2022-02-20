@@ -5,8 +5,8 @@ import axios from 'axios'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import router from '@/router'
 
-const domain = 'http://127.0.0.1:8000/api/'
-// const domain = 'https://education.arkanorg.com/api/'
+// const domain = 'http://127.0.0.1:8000/api/'
+const domain = 'https://education.arkanorg.com/api/'
 
 const axiosIns = axios.create({
   // You can add your headers here

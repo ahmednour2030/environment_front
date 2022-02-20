@@ -7,14 +7,18 @@ import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
 import auth from './auth'
 import categories from './categories'
+import content from './content'
+import point from './point'
+import link from './link'
 import subCategories from './sub-categories'
 import modules from './modules'
 import modulesData from './modulesData'
 import company from './company'
 import exam from './exam'
+import activities from './activities'
 import common from './common'
 import orders from './orders'
-import users from './users'
+import students from './students'
 import admins from './admins'
 import quality from './quality'
 import questionnaire from './questionnaires'
@@ -43,7 +47,7 @@ export default new Vuex.Store({
     exam,
     common,
     orders,
-    users,
+    students,
     admins,
     quality,
     questionnaire,
@@ -55,6 +59,10 @@ export default new Vuex.Store({
     ads,
     notes,
     library,
+    activities,
+    content,
+    point,
+    link,
   },
   strict: process.env.DEV,
 })

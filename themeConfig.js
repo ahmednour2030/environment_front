@@ -12,7 +12,7 @@ export const $themeBreakpoints = {}
 // APP CONFIG
 export const $themeConfig = {
   app: {
-    appName: 'Rentage',
+    appName: 'Education',
     // eslint-disable-next-line global-require
     appLogoImage: require('@/assets/images/logo/logo.svg'),
   },

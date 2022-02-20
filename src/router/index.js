@@ -9,8 +9,8 @@ Vue.use(VueRouter)
  * @type {VueRouter}
  */
 const router = new VueRouter({
-  mode: 'history',
-  // mode: 'hash',
+  // mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   scrollBehavior() {
     return { x: 0, y: 0 }
@@ -68,16 +68,128 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/all-adds',
-      name: 'all-adds',
-      component: () => import('@/views/admin/adds/receivedAdds'),
+      path: '/add-activities',
+      name: 'add-activities',
+      component: () => import('@/views/admin/activities/AddActivity'),
       meta: {
         authRequired: true,
         role: 'admin',
-        pageTitle: 'الاعلانات',
+        pageTitle: 'إضافة التصنيفات',
         breadcrumb: [
           {
-            text: 'الاعلانات',
+            text: 'إضافة التصنيفات',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-activities',
+      name: 'all-activities',
+      component: () => import('@/views/admin/activities/AllActivity'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'التصنيفات',
+        breadcrumb: [
+          {
+            text: 'التصنيفات',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/add-content',
+      name: 'add-content',
+      component: () => import('@/views/admin/modules-content/content/AddContent'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'إضافة محتوى',
+        breadcrumb: [
+          {
+            text: 'إضافة المحتوى',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-content',
+      name: 'all-content',
+      component: () => import('@/views/admin/modules-content/content/AllContent'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'المحتوى',
+        breadcrumb: [
+          {
+            text: 'المحتوى',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/add-point',
+      name: 'add-point',
+      component: () => import('@/views/admin/modules-content/point/AddPoint'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'إضافة نقطة',
+        breadcrumb: [
+          {
+            text: 'إضافة نقطة',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-point',
+      name: 'all-point',
+      component: () => import('@/views/admin/modules-content/point/AllPoint'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'النقاط',
+        breadcrumb: [
+          {
+            text: 'النقاط',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/add-link',
+      name: 'add-link',
+      component: () => import('@/views/admin/modules-content/link/AddLink'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'إضافة رابط',
+        breadcrumb: [
+          {
+            text: 'إضافة رابط',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-link',
+      name: 'all-link',
+      component: () => import('@/views/admin/modules-content/link/AllLink'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'الروابط',
+        breadcrumb: [
+          {
+            text: 'الروابط',
             active: true,
           },
         ],
@@ -277,166 +389,6 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/received_adds',
-      name: 'receivedAdds',
-      component: () => import('@/views/admin/adds/receivedAdds'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'الاعلانات المستلمه',
-        breadcrumb: [
-          {
-            text: 'الاعلانات',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/accepted_orders',
-      name: 'acceptedAdds',
-      component: () => import('@/views/admin/adds/acceptedAdds'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'الاعلانات تمت المراجعه',
-        breadcrumb: [
-          {
-            text: 'الاعلانات',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/accepted-orders',
-      name: 'acceptedOrders',
-      component: () => import('@/views/admin/orders/AcceptedOrders'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'الطلبات',
-        breadcrumb: [
-          {
-            text: 'الطلبات',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/waiting-orders',
-      name: 'waitingOrders',
-      component: () => import('@/views/admin/orders/WaitingOrders'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'الطلبات',
-        breadcrumb: [
-          {
-            text: 'الطلبات',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/freelancers',
-      name: 'freelancers',
-      component: () => import('@/views/admin/freelancers/AllFreelancers'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'العماله الحرة',
-        breadcrumb: [
-          {
-            text: 'العماله الحرة',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/freelancers/active',
-      name: 'freelancersActive',
-      component: () => import('@/views/admin/freelancers/ActiveFreelancers'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'العماله الحرة',
-        breadcrumb: [
-          {
-            text: 'العماله الحرة',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/companies',
-      name: 'companies',
-      component: () => import('@/views/admin/companies/AllCompanies'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'الشركات',
-        breadcrumb: [
-          {
-            text: 'الشركات',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/companies/add',
-      name: 'createCompany',
-      component: () => import('@/views/admin/companies/CreateCompany'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'إضافة شركة',
-        breadcrumb: [
-          {
-            text: 'إضافة شركة',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/companies/edit/:id',
-      name: 'editCompany',
-      component: () => import('@/views/admin/companies/CreateCompany'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'تعديل شركة',
-        breadcrumb: [
-          {
-            text: 'تعديل شركة',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/companies/active',
-      name: 'companiesActive',
-      component: () => import('@/views/admin/companies/ActiveCompanies'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'الشركات',
-        breadcrumb: [
-          {
-            text: 'الشركات',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
       path: '/customers',
       name: 'customers',
       component: () => import('@/views/admin/customers/AllCustomers'),
@@ -485,6 +437,38 @@ const router = new VueRouter({
       },
     },
     {
+      path: '/students',
+      name: 'students',
+      component: () => import('@/views/admin/students/AllStudents'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'الطلاب',
+        breadcrumb: [
+          {
+            text: 'الطلاب',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/students/exams/:id',
+      name: 'students-exams',
+      component: () => import('@/views/admin/students/ExamsStudent'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'الطلاب',
+        breadcrumb: [
+          {
+            text: 'الطلاب',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
       path: '/messages',
       name: 'messages',
       component: () => import('@/views/admin/messages/Messages'),
@@ -495,102 +479,6 @@ const router = new VueRouter({
         breadcrumb: [
           {
             text: 'الادمن',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/wedding/create',
-      name: 'wedding',
-      component: () => import('@/views/admin/wedding/CreateWedding'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'قاعة افراح جديدة',
-        breadcrumb: [
-          {
-            text: 'قاعات الافراح',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/wedding/edit/:id',
-      name: 'weddingُEdit',
-      component: () => import('@/views/admin/wedding/CreateWedding'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'تعديل قاعة افراح ',
-        breadcrumb: [
-          {
-            text: 'قاعات الافراح',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/wedding',
-      name: 'weddingAll',
-      component: () => import('@/views/admin/wedding/AllWedding'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'قاعات الافراح',
-        breadcrumb: [
-          {
-            text: 'قاعات الافراح',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/wedding/active',
-      name: 'ActiveWedding',
-      component: () => import('@/views/admin/wedding/ActiveWedding'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'قاعات الافراح',
-        breadcrumb: [
-          {
-            text: 'قاعات الافراح',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/exam/create',
-      name: 'factoryCreate',
-      component: () => import('@/views/admin/factories/CreateFactory'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'إضافة امتحان',
-        breadcrumb: [
-          {
-            text: 'اضافة امتحان',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/exam/edit/:id',
-      name: 'factoryEdit',
-      component: () => import('@/views/admin/factories/CreateFactory'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'تعديل الامتحان',
-        breadcrumb: [
-          {
-            text: 'تعديل الامتحان',
             active: true,
           },
         ],
@@ -645,55 +533,6 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/modules/data/update:id',
-      name: 'modulesDataEdit',
-      component: () => import('@/views/admin/factories/CreateFactory'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'تعديل الامتحان',
-        breadcrumb: [
-          {
-            text: 'تعديل الامتحان',
-            active: true,
-          },
-        ],
-      },
-    },
-
-    {
-      path: '/quality-evaluator/create',
-      name: 'quality-evaluator-create',
-      component: () => import('@/views/admin/quality-evaluator/CreateQualityEvaluator'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'انشاء حساب مقيم الجودة',
-        breadcrumb: [
-          {
-            text: 'انشاء حساب مقيم الجودة الجودة',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/quality-evaluator/edit/:id',
-      name: 'quality-evaluator-edit',
-      component: () => import('@/views/admin/quality-evaluator/CreateQualityEvaluator'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'تعديل حساب مقيم الجودة',
-        breadcrumb: [
-          {
-            text: 'تعديل حساب مقيم الجودة الجودة',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
       path: '/setting/all-settings',
       name: 'setting.all',
       component: () => import('@/views/admin/setting/AllSettings'),
@@ -720,22 +559,6 @@ const router = new VueRouter({
         breadcrumb: [
           {
             text: 'التقارير',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/slider/all-sliders',
-      name: 'sliders.all',
-      component: () => import('@/views/admin/slider/AllSliders'),
-      meta: {
-        authRequired: true,
-        role: 'admin',
-        pageTitle: 'المنزلق',
-        breadcrumb: [
-          {
-            text: 'المنزلق',
             active: true,
           },
         ],

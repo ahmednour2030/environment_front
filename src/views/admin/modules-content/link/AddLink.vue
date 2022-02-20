@@ -3,74 +3,94 @@
     <b-card-group deck>
       <b-card
         header-tag="header"
-        title="إضافة مكتبة"
+        title="إضافة لينك جديد"
       >
         <validation-observer ref="categoryRules">
           <b-form>
             <b-row>
               <!-- name -->
-              <b-col md="8">
+              <b-col md="6">
                 <b-form-group
-                  label="عنوان الكتاب"
-                  label-for="name"
+                  label="اسم الرابط"
+                  label-for="title"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="name"
+                    name="title"
                     rules="required"
                   >
                     <b-form-input
-                      id="name"
-                      v-model="name"
+                      id="title"
+                      v-model="title"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="عنوان الكتاب"
+                      placeholder="اسم الرابط"
                     />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
               </b-col>
-              <b-col md="4">
+              <!-- name -->
+              <b-col md="6">
                 <b-form-group
-                  label="اسم الموديول"
-                  label-for="module"
+                  label="وصف الرابط"
+                  label-for="description"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="module"
+                    name="description"
                     rules="required"
                   >
-                    <b-form-select
-                      id="module"
-                      v-model="moduleId"
-                      placeholder="اختار الاختبار"
-                      value-field="id"
-                      text-field="name"
-                      :options="modules"
+                    <b-form-input
+                      id="description"
+                      v-model="description"
                       :state="errors.length > 0 ? false : null"
+                      placeholder="وصف الرابط"
                     />
-
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <!-- name -->
+              <b-col md="6">
+                <b-form-group
+                  label="الرابط"
+                  label-for="url"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="url"
+                    rules="required"
+                  >
+                    <b-form-input
+                      id="name"
+                      v-model="url"
+                      :state="errors.length > 0 ? false : null"
+                      placeholder="الرابط"
+                    />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
               </b-col>
               <b-col md="6">
                 <b-form-group
-                  label="رفع الملف"
-                  label-for="image"
+                  label="اخر التصنيف"
+                  label-for="point"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="file"
+                    name="name"
                     rules="required"
                   >
-                    <b-form-file
-                      id="file"
-                      v-model="imageCat"
-                      type="file"
+                    <b-form-select
+                      id="exam"
+                      v-model="pointId"
+                      placeholder="اختار التصنيف"
+                      value-field="id"
+                      text-field="title"
+                      :options="points"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="الملف"
-                      @change="fileCategory"
                     />
+
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
@@ -87,7 +107,7 @@
                     icon="PlusIcon"
                     class="mr-25"
                   />
-                  إضافة ملف للمكتبة
+                  إضافة رابط
                 </b-button>
               </b-col>
             </b-row>
@@ -100,7 +120,7 @@
 
 <script>
 import { ValidationProvider, ValidationObserver, localize } from 'vee-validate'
-import { required } from '@/@core/utils/validations/validations'
+import { required } from '@core/utils/validations/validations'
 import {
   BCard,
   BCardGroup,
@@ -109,9 +129,7 @@ import {
   BFormGroup,
   BForm,
   BRow,
-  BCol,
-  BFormFile,
-  BFormSelect,
+  BCol, BFormSelect,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
@@ -119,14 +137,14 @@ const dictionary = {
   ar: {
     names: {
       name: 'اسم القسم',
-      module: 'اختر الموديول',
-      file: 'يجب اختيار الملف',
+      image: 'صورة القسم',
+      point: 'قيمة النقط',
     },
   },
 }
 localize('ar', dictionary.ar)
 export default {
-  name: 'AddCategory',
+  name: 'AddLink',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -135,73 +153,53 @@ export default {
     BButton,
     BFormInput,
     BFormGroup,
+    BFormSelect,
     BForm,
     BRow,
     BCol,
-    BFormFile,
-    BFormSelect,
   },
   data() {
     return {
-      modules: [],
+      points: [],
+      pointId: null,
       category_file: null,
-      moduleId: null,
-      name: null,
-      points: '',
+      title: '',
+      description: '',
+      url: '',
       image: null,
       imageCat: null,
       required,
     }
   },
   created() {
-    this.$store.dispatch('modules/fetchNames').then(cats => {
-      this.modules = cats.data.data
-    })
+    this.fetchPoints()
   },
   methods: {
     validationForm() {
       const formData = new FormData()
-      formData.append('title', this.name)
-      formData.append('file', this.category_file)
-      formData.append('module_id', this.moduleId)
-      console.log(formData)
+      formData.append('title', this.title)
+      formData.append('description', this.description)
+      formData.append('url', this.url)
+      formData.append('point_id', this.pointId)
       this.$refs.categoryRules.validate().then(success => {
         if (success) {
-          this.$store.dispatch('library/store', formData).then(() => {
-            this.name = ''
-            this.imageCat = null
-            this.moduleId = null
-            this.$refs.categoryRules.reset()
+          this.$store.dispatch('link/store', formData).then(() => {
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: 'تم إضافة الملف في المكتبة بنجاح',
+                title: 'تم إضافة الرابط بنجاح',
                 icon: 'CheckCircleIcon',
                 variant: 'success',
               },
             })
           })
+          this.$router.push('all-link')
         }
       })
     },
-    validationFormSub() {
-      const formData = new FormData()
-      formData.append('name', this.nameSub)
-      formData.append('category_id', this.mainCatId)
-      this.$refs.simpleRules.validate().then(success => {
-        console.log(formData)
-        if (success) {
-          this.$store.dispatch('subCategories/store', formData).then(() => {
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة القسم بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
-          })
-        }
+    fetchPoints() {
+      this.$store.dispatch('point/fetch').then(res => {
+        this.points = res.data.data
       })
     },
     fileCategory(event) {

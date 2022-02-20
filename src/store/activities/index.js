@@ -3,26 +3,26 @@ import axios from '@axios'
 export default {
   namespaced: true,
   state: {
-    exams: [],
+    activities: [],
   },
   getters: {},
   mutations: {
-    SET_RECORD(state, exams) {
-      state.exams = exams
+    SET_RECORD(state, activities) {
+      state.activities = activities
     },
     UPDATE_RECORD(state, data) {
-      const catIndex = state.exams.findIndex(cat => cat.id === data.id)
-      Object.assign(state.exams[catIndex], data)
+      const catIndex = state.activities.findIndex(cat => cat.id === data.id)
+      Object.assign(state.activities[catIndex], data)
     },
     REMOVE_RECORD(state, itemId) {
-      const caseIndex = state.exams.findIndex(d => d.id === itemId)
-      state.exams.splice(caseIndex, 1)
+      const caseIndex = state.activities.findIndex(d => d.id === itemId)
+      state.activities.splice(caseIndex, 1)
     },
   },
   actions: {
     store(ctx, data) {
       return new Promise((resolve, reject) => {
-        axios.post('admin/exams/create', data)
+        axios.post('admin/modules/activities/create', data)
           .then(res => {
             resolve(res)
           })
@@ -31,7 +31,7 @@ export default {
     },
     update(ctx, data) {
       return new Promise((resolve, reject) => {
-        axios.post('admin/exams/update', data)
+        axios.post('admin/modules/activities/update', data)
           .then(res => {
             resolve(res)
           })
@@ -40,7 +40,7 @@ export default {
     },
     fetch({ commit }) {
       return new Promise((resolve, reject) => {
-        axios.get('admin/exams')
+        axios.get('admin/modules/activities')
           .then(response => {
             commit('SET_RECORD', response.data.data)
             resolve(response)
@@ -50,7 +50,7 @@ export default {
     },
     fetchName() {
       return new Promise((resolve, reject) => {
-        axios.get('admin/exams/name')
+        axios.get('admin/activities/name')
           .then(response => {
             resolve(response)
           })
@@ -58,27 +58,11 @@ export default {
       })
     },
 
-    /**
-     *
-     * @param ctx
-     * @param user_id
-     * @returns {Promise<unknown>}
-     */
-    // eslint-disable-next-line camelcase
-    fetchSolutionByStudent(ctx, user_id) {
+    delete({ commit }, activityId) {
       return new Promise((resolve, reject) => {
-        axios.post('admin/exams/students', { user_id })
-          .then(response => {
-            resolve(response)
-          })
-          .catch(error => reject(error))
-      })
-    },
-    delete({ commit }, examId) {
-      return new Promise((resolve, reject) => {
-        axios.post('admin/exams/delete', { exam_id: examId })
+        axios.post('admin/modules/activities/delete', { activity_id: activityId })
           .then(res => {
-            commit('REMOVE_RECORD', examId)
+            commit('REMOVE_RECORD', activityId)
             resolve(res)
           })
           .catch(error => reject(error))
