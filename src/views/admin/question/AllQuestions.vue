@@ -127,8 +127,8 @@ export default {
     },
     confirmDelete(id) {
       this.$swal({
-        title: 'حذف الكوبون',
-        text: 'هل تريد حذف الكوبون',
+        title: 'حذف السؤال',
+        text: 'هل تريد حذف السؤال',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'تاكيد الحذف !',
@@ -140,15 +140,15 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
-          this.$swal({
-            icon: 'success',
-            title: 'عملية الحذف',
-            text: 'تم حذف الكوبون بنجاح',
-            customClass: {
-              confirmButton: 'btn btn-success',
-            },
-          })
-          this.$store.dispatch('coupon/delete', id).then(() => {
+          this.$store.dispatch('question/delete', id).then(() => {
+            this.$swal({
+              icon: 'success',
+              title: 'عملية الحذف',
+              text: 'تم حذف السؤال بنجاح',
+              customClass: {
+                confirmButton: 'btn btn-success',
+              },
+            })
           })
         }
       })

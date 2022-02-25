@@ -82,7 +82,7 @@
 <script>
 import EditCoupon from '@/views/admin/questionnaires/EditQuestionnaire-old.vue'
 import {
-  BCol, BTable, BButton, BPagination, BCard,
+  BCol, BTable, BButton, BPagination, BCard, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -97,6 +97,7 @@ export default {
     BCol,
     BTable,
     BButton,
+    BSpinner,
     BPagination,
   },
   data() {
@@ -138,8 +139,8 @@ export default {
     },
     confirmDelete(id) {
       this.$swal({
-        title: 'حذف الكوبون',
-        text: 'هل تريد حذف الكوبون',
+        title: 'حذف الاختبار',
+        text: 'هل تريد حذف الاختبار',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'تاكيد الحذف !',
@@ -151,15 +152,15 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
-          this.$swal({
-            icon: 'success',
-            title: 'عملية الحذف',
-            text: 'تم حذف الاختبار بنجاح',
-            customClass: {
-              confirmButton: 'btn btn-success',
-            },
-          })
-          this.$store.dispatch('coupon/delete', id).then(() => {
+          this.$store.dispatch('exam/delete', id).then(() => {
+            this.$swal({
+              icon: 'success',
+              title: 'عملية الحذف',
+              text: 'تم حذف الاختبار بنجاح',
+              customClass: {
+                confirmButton: 'btn btn-success',
+              },
+            })
           })
         }
       })

@@ -182,6 +182,7 @@ export default {
           formData.append('name', this.title)
 
           this.$store.dispatch('exam/store', formData).then(() => {
+            this.$router.push('/exams')
             this.$toast({
               component: ToastificationContent,
               props: {
@@ -190,7 +191,6 @@ export default {
                 variant: 'success',
               },
             })
-            this.$router.push('/exams')
           })
         }
       })

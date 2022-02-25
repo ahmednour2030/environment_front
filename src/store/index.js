@@ -6,6 +6,7 @@ import app from './app'
 import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
 import auth from './auth'
+import home from './home'
 import categories from './categories'
 import content from './content'
 import point from './point'
@@ -30,6 +31,7 @@ import adsCategory from './ads-category'
 import ads from './ads'
 import notes from './notes'
 import library from './library'
+import files from './files'
 
 Vue.use(Vuex)
 
@@ -63,6 +65,8 @@ export default new Vuex.Store({
     content,
     point,
     link,
+    home,
+    files,
   },
   strict: process.env.DEV,
 })

@@ -6,8 +6,8 @@
         md="2"
       >
         <statisticsCard
-          :statistic="total_price"
-          icon="DollarSignIcon"
+          :statistic="students"
+          icon="UserIcon"
           statistic-title="عدد الطلاب"
         />
       </b-col>
@@ -16,8 +16,8 @@
         md="2"
       >
         <statisticsCard
-          :statistic="total"
-          icon="ShoppingCartIcon"
+          :statistic="questions"
+          icon="BookIcon"
           statistic-title="عدد الاختبارت"
         />
       </b-col>
@@ -26,8 +26,8 @@
         md="2"
       >
         <statisticsCard
-          :statistic="completed"
-          icon="ShoppingCartIcon"
+          :statistic="books"
+          icon="BookOpenIcon"
           statistic-title="عدد الكتب"
           color="primary"
         />
@@ -37,8 +37,8 @@
         md="2"
       >
         <statisticsCard
-          :statistic="rejected"
-          icon="ShoppingCartIcon"
+          :statistic="questionnaire"
+          icon="BookmarkIcon"
           statistic-title="عدد الاستبيانات"
           color="primary"
         />
@@ -48,8 +48,8 @@
         md="2"
       >
         <statisticsCard
-          :statistic="newOrders"
-          icon="UserIcon"
+          :statistic="notes"
+          icon="MessageCircleIcon"
           statistic-title="الملاحظات"
           color="primary"
         />
@@ -59,7 +59,7 @@
         md="2"
       >
         <statisticsCard
-          :statistic="animateNumber(current)"
+          :statistic="admins"
           icon="UserIcon"
           statistic-title="الادمن"
           color="primary"
@@ -82,14 +82,12 @@ export default {
   },
   data() {
     return {
-      new: 0,
-      countnum: 0,
-      current: 0,
-      rejected: 0,
-      total: 0,
-      completed: 0,
-      newOrders: 0,
-      total_price: 0,
+      admins: 0,
+      students: 0,
+      books: 0,
+      questions: 0,
+      questionnaire: 0,
+      notes: 0,
       // role: JSON.parse(localStorage.getItem('info')).role.name,
       // role: 'admin',
     }
@@ -98,14 +96,14 @@ export default {
     // const role = this.role === 'admin'
     //   ? 'common/fetchOrdersCount'
     //   : 'common/fetchOrdersCountUser'
-    // this.$store.dispatch(role).then(res => {
-    //   this.rejected = res.data.data.rejected
-    //   this.total = res.data.data.total_count
-    //   this.completed = res.data.data.completed
-    //   this.current = res.data.data.current
-    //   this.newOrders = res.data.data.new
-    //   this.total_price = res.data.data.total_price
-    // })
+    this.$store.dispatch('home/fetch').then(res => {
+      this.admins = res.data.data.admins
+      this.students = res.data.data.students
+      this.books = res.data.data.books
+      this.questions = res.data.data.questions
+      this.questionnaire = res.data.data.questionnaire
+      this.notes = res.data.data.notes
+    })
   },
   methods: {
     animateNumber(end) {

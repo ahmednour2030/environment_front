@@ -31,16 +31,16 @@
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              name
+              Alaa Ramadan
             </p>
             <!--            <span class="user-status">{{ userData.role.name }}</span>-->
-            <span class="user-status">name</span>
+            <span class="user-status">Admin</span>
           </div>
           <b-avatar
             size="40"
             variant="light-primary"
             badge
-            src=""
+            src="@/assets/images/avatars/admin_avatar.jpeg"
             class="badge-minimal"
             badge-variant="success"
           />

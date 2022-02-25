@@ -1,21 +1,21 @@
 <template>
   <b-modal
-    id="EditCat"
+    id="EditPoint"
     cancel-variant="outline-secondary"
     ok-title="تحديث"
     cancel-title="الغاء"
     centered
-    size="sm"
-    title="تعديل القسم"
+    size="lg"
+    title="تعديل النقطة"
     @ok="update"
   >
     <validation-observer ref="simpleRules">
       <b-form>
         <b-row>
           <!-- name -->
-          <b-col md="12">
+          <b-col md="6">
             <b-form-group
-              label="اسم القسم"
+              label="اسم النقطة"
               label-for="name"
             >
               <validation-provider
@@ -25,7 +25,7 @@
               >
                 <b-form-input
                   id="name"
-                  v-model="dataName"
+                  v-model="dataTitle"
                   :state="errors.length > 0 ? false : null"
                   placeholder="اسم القسم"
                 />
@@ -33,9 +33,55 @@
               </validation-provider>
             </b-form-group>
           </b-col>
+          <b-col md="6">
+            <b-form-group
+              label="اختر المحتوى"
+              label-for="moduleId"
+            >
+              <validation-provider
+                #default="{ errors }"
+                name="moduleId"
+                rules="required"
+              >
+                <b-form-select
+                  id="moduleId"
+                  v-model="dataContentId"
+                  placeholder="اختر المحتوى"
+                  value-field="id"
+                  text-field="title"
+                  :options="contents"
+                  :state="errors.length > 0 ? false : null"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group
+              label="اختر التصنيف"
+              label-for="name"
+            >
+              <validation-provider
+                #default="{ errors }"
+                name="name"
+                rules="required"
+              >
+                <b-form-select
+                  id="exam"
+                  v-model="dataCategoryId"
+                  placeholder="اختر التصنيف"
+                  value-field="id"
+                  text-field="name"
+                  :options="categories"
+                  :state="errors.length > 0 ? false : null"
+                />
 
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+          </b-col>
           <!-- image -->
-          <b-col md="12">
+          <b-col md="6">
             <b-form-group
               label="صورة القسم"
               label-for="image"
@@ -56,6 +102,26 @@
               </validation-provider>
             </b-form-group>
           </b-col>
+          <!-- Description -->
+          <b-col md="12">
+            <b-form-group
+              label="الوصف"
+              label-for="description"
+            >
+              <validation-provider
+                #default="{ errors }"
+                name="description"
+                rules="required"
+              >
+                <ckeditor
+                  v-model="dataDescription"
+                  :editor="editor"
+                  :config="editorConfig"
+                />
+                <small class="text-danger">{{ errors[0] }}</small>
+              </validation-provider>
+            </b-form-group>
+          </b-col>
         </b-row>
       </b-form>
     </validation-observer>
@@ -71,11 +137,13 @@ import {
   BForm,
   BRow,
   BCol,
-  // BFormSelect,
+  BFormSelect,
   BFormFile,
   BModal,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import '@ckeditor/ckeditor5-build-classic/build/translations/ar'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 const dictionary = {
   ar: {
@@ -94,7 +162,7 @@ export default {
     ValidationObserver,
     BRow,
     BCol,
-    // BFormSelect,
+    BFormSelect,
     BFormFile,
     BForm,
     BFormGroup,
@@ -112,27 +180,44 @@ export default {
   },
   data() {
     return {
+      editor: ClassicEditor,
+      editorData: '<p><br><br><br></p>',
+      editorConfig: {
+        language: 'ar',
+      },
       dataId: '',
-      dataName: '',
-      dataPoints: '',
-      dataImage: null,
+      dataTitle: '',
+      dataContentId: '',
+      dataCategoryId: '',
+      dataDescription: '',
+      dataImage: '',
+      contents: [],
+      categories: [],
       required,
     }
   },
   watch: {
     obj() {
       const {
-        id, name, points,
+        id, title, description, category_id, content_id,
       } = JSON.parse(
         JSON.stringify(this.obj),
       )
       this.dataId = id
-      this.dataName = name
-      this.dataPoints = points
+      this.dataTitle = title
+      this.dataDescription = description
+      // eslint-disable-next-line camelcase
+      this.dataContentId = content_id
+      // eslint-disable-next-line camelcase
+      this.dataCategoryId = category_id
     },
   },
   mounted() {
-    console.clear()
+    // console.clear()
+  },
+  created() {
+    this.fetchContents()
+    this.fetchCategories()
   },
   methods: {
     update(e) {
@@ -140,26 +225,39 @@ export default {
       this.$refs.simpleRules.validate().then(success => {
         if (success) {
           const Obj = new FormData()
-          Obj.append('category_id', this.dataId)
-          Obj.append('name', this.dataName)
+          Obj.append('point_id', this.dataId)
+          Obj.append('title', this.dataTitle)
+          Obj.append('description', this.dataDescription)
+          Obj.append('category_id', this.dataCategoryId)
+          Obj.append('content_id', this.dataContentId)
           // Obj.append('points', this.dataPoints)
           if (typeof this.dataImage === 'object') {
             Obj.append('image', this.dataImage)
           }
-          this.$store.dispatch('categories/edit', Obj).then(() => {
+          this.$store.dispatch('point/edit', Obj).then(() => {
+            this.$bvModal.hide('EditPoint')
             this.$toast({
               component: ToastificationContent,
               props: {
-                title: 'تم تعديل التصنيف بنجاح',
+                title: 'تم تعديل النقطة بنجاح',
                 icon: 'CheckCircleIcon',
                 variant: 'success',
               },
             })
-            this.$bvModal.hide('EditCat')
           })
         } else {
           e.preventDefault()
         }
+      })
+    },
+    fetchContents() {
+      this.$store.dispatch('content/fetch').then(res => {
+        this.contents = res.data.data
+      })
+    },
+    fetchCategories() {
+      this.$store.dispatch('categories/fetch').then(res => {
+        this.categories = res.data.data
       })
     },
     fileCategory(event) {

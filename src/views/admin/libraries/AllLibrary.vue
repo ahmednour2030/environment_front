@@ -89,7 +89,7 @@
 <script>
 import EditLibrary from '@/views/admin/libraries/EditLibrary.vue'
 import {
-  BRow, BCol, BTable, BButton, BPagination, BCard,
+  BRow, BCol, BTable, BButton, BPagination, BCard, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -104,6 +104,7 @@ export default {
     BCol,
     BTable,
     BButton,
+    BSpinner,
     BPagination,
     EditLibrary,
   },

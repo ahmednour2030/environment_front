@@ -3,7 +3,7 @@
     <b-card-group deck>
       <b-card
         header-tag="header"
-        title="إضافة نقطة جديد"
+        title="إضافة هدف او ملخص"
       >
         <validation-observer ref="simpleRules">
           <b-form
@@ -11,9 +11,9 @@
             class="repeater-form"
           >
             <b-row>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group
-                  label="اختر المحتوى"
+                  label="اختر الموديول"
                   label-for="moduleId"
                 >
                   <validation-provider
@@ -23,11 +23,11 @@
                   >
                     <b-form-select
                       id="moduleId"
-                      v-model="contentId"
-                      placeholder="اختر المحتوى"
+                      v-model="moduleId"
+                      placeholder="اختر الموديول"
                       value-field="id"
-                      text-field="title"
-                      :options="contents"
+                      text-field="name"
+                      :options="modules"
                       :state="errors.length > 0 ? false : null"
                     />
 
@@ -35,20 +35,20 @@
                   </validation-provider>
                 </b-form-group>
               </b-col>
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group
-                  label="اختر التصنيف"
-                  label-for="name"
+                  label="اخر التصنيف"
+                  label-for="category"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="name"
+                    name="category"
                     rules="required"
                   >
                     <b-form-select
-                      id="exam"
+                      id="category"
                       v-model="categoryId"
-                      placeholder="اختر التصنيف"
+                      placeholder="اختار التصنيف"
                       value-field="id"
                       text-field="name"
                       :options="categories"
@@ -59,11 +59,35 @@
                   </validation-provider>
                 </b-form-group>
               </b-col>
-              <hr class="w-100">
-              <!-- name -->
-              <b-col md="6">
+              <b-col md="4">
                 <b-form-group
-                  label="اسم النقطة"
+                  label="اخر النوع"
+                  label-for="type"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="type"
+                    rules="required"
+                  >
+                    <b-form-select
+                      id="type"
+                      v-model="typeId"
+                      placeholder="اختار النوع"
+                      value-field="id"
+                      text-field="name"
+                      :options="types"
+                      :state="errors.length > 0 ? false : null"
+                    />
+
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+
+              <hr class="w-100">
+              <b-col md="8">
+                <b-form-group
+                  label="عنوان"
                   label-for="title"
                 >
                   <validation-provider
@@ -75,7 +99,7 @@
                       id="name"
                       v-model="title"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="اسم النقطة"
+                      placeholder="عنوان"
                     />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
@@ -97,6 +121,7 @@
                       :editor="editor"
                       :config="editorConfig"
                     />
+
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
@@ -115,7 +140,7 @@
                   icon="PlusIcon"
                   class="mr-25"
                 />
-                إضافة نقطة للموديول
+                إضافة للموديول
               </b-button>
             </b-col>
           </b-row>
@@ -127,36 +152,42 @@
 
 <script>
 import { ValidationProvider, ValidationObserver, localize } from 'vee-validate'
-import { required } from '@core/utils/validations/validations'
+import { numeric, required } from '@/@core/utils/validations/validations'
+// import { required } from '@validations'
 import {
   BCard,
   BCardGroup,
   BButton,
   BFormGroup,
+  BFormInput,
   BForm,
   BRow,
   BCol,
   BFormSelect,
-  BFormInput,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // Import translations for the German language.
 import '@ckeditor/ckeditor5-build-classic/build/translations/ar'
 
+// import Image from '@ckeditor/ckeditor5-image/src/image'
+// import ImageResizeEditing from '@ckeditor/ckeditor5-image/src/imageresize/imageresizeediting'
+// import ImageResizeHandles from '@ckeditor/ckeditor5-image/src/imageresize/imageresizehandles'
+
 const dictionary = {
   ar: {
     names: {
-      title: 'اسم النقطة',
-      description: 'وصف النقطة',
-      image: 'صورة القسم',
-      point: 'قيمة النقط',
+      moduleId: 'الموديول',
+      category: 'التصنيف',
+      type: 'النوع',
+      description: ' الوصف',
     },
   },
 }
 localize('ar', dictionary.ar)
+
 export default {
-  name: 'AddPoint',
+  name: 'AddModuleData',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -177,49 +208,35 @@ export default {
       editorConfig: {
         language: 'ar',
       },
-      contents: [],
-      contentId: null,
+      types: [
+        {
+          id: 1,
+          name: 'الاهداف',
+        },
+        {
+          id: 2,
+          name: 'الملخص',
+        },
+      ],
+      typeId: null,
+      modules: [],
+      moduleId: null,
       categories: [],
       categoryId: null,
-      category_file: null,
       title: '',
       description: '',
-      points: '',
-      image: null,
-      imageCat: null,
       required,
+      numeric,
     }
   },
   created() {
-    this.fetchContents()
+    this.fetchModules()
     this.fetchCategories()
   },
   methods: {
-    validationForm() {
-      const formData = new FormData()
-      formData.append('content_id', this.contentId)
-      formData.append('category_id', this.categoryId)
-      formData.append('title', this.title)
-      formData.append('description', this.description)
-      this.$refs.simpleRules.validate().then(success => {
-        if (success) {
-          this.$store.dispatch('point/store', formData).then(() => {
-            this.$router.push('all-point')
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة نقطة بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
-          })
-        }
-      })
-    },
-    fetchContents() {
-      this.$store.dispatch('content/fetch').then(res => {
-        this.contents = res.data.data
+    fetchModules() {
+      this.$store.dispatch('modules/fetchNames').then(res => {
+        this.modules = res.data.data
       })
     },
     fetchCategories() {
@@ -227,12 +244,52 @@ export default {
         this.categories = res.data.data
       })
     },
-    fileCategory(event) {
-      // eslint-disable-next-line prefer-destructuring
-      this.category_file = event.target.files[0]
+    add() {
+      this.inputs.push({
+        answer: '',
+        points: '',
+      })
+      this.$nextTick(() => {
+        this.trAddHeight(this.$refs.row[0].offsetHeight)
+      })
+    },
+    remove(index) {
+      this.inputs.splice(index, 1)
+      this.trTrimHeight(this.$refs.row[0].offsetHeight)
+    },
+    initTrHeight() {
+      this.trSetHeight(null)
+      this.$nextTick(() => {
+        this.trSetHeight(this.$refs.form.scrollHeight)
+      })
+    },
+    validationForm() {
+      this.$refs.simpleRules.validate().then(success => {
+        if (success) {
+          const formData = new FormData()
+          formData.append('title', this.title)
+          formData.append('description', this.description)
+          formData.append('module_id', this.moduleId)
+          formData.append('category_id', this.categoryId)
+          formData.append('type', this.typeId)
+
+          this.$store.dispatch('modulesData/store', formData).then(() => {
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'تم إضافة المحتوى للموديول بنجاح',
+                icon: 'CheckCircleIcon',
+                variant: 'success',
+              },
+            })
+            // this.$router.push(`/questions/${this.examId}`)
+          })
+        }
+      })
     },
   },
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+</style>

@@ -23,7 +23,27 @@ export default {
   actions: {
     fetch({ commit }) {
       return new Promise((resolve, reject) => {
-        axios.get('admin/modules')
+        axios.get('admin/modules/data')
+          .then(response => {
+            commit('SET_RECORD', response.data.data)
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchObjectives({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios.get('admin/modules/data/objectives')
+          .then(response => {
+            commit('SET_RECORD', response.data.data)
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    fetchSummary({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios.get('admin/modules/data/summary')
           .then(response => {
             commit('SET_RECORD', response.data.data)
             resolve(response)
@@ -33,7 +53,7 @@ export default {
     },
     fetchNames({ commit }) {
       return new Promise((resolve, reject) => {
-        axios.get('admin/modules/name')
+        axios.get('admin/modules/data/names')
           .then(response => {
             commit('SET_RECORD', response.data.data)
             resolve(response)
@@ -61,11 +81,11 @@ export default {
     },
 
     // eslint-disable-next-line camelcase
-    delete({ commit }, userId) {
+    delete({ commit }, id) {
       return new Promise((resolve, reject) => {
-        axios.post(`admin/modules/delete/${userId}`)
+        axios.post('admin/modules/data/delete', { id })
           .then(res => {
-            commit('REMOVE_RECORD', userId)
+            commit('REMOVE_RECORD', id)
             resolve(res)
           })
           .catch(error => reject(error))

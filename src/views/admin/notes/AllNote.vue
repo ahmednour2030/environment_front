@@ -28,7 +28,10 @@
 
             <template #table-busy>
               <div class="text-center text-dark my-2">
-                <b-spinner class="align-middle" />
+                <b-spinner
+                  style="width: 1.3rem; height: 1.3rem;"
+                  class="align-middle"
+                />
                 <strong> جار تحميل البيانات ... </strong>
               </div>
             </template>
@@ -39,15 +42,21 @@
 
             <template #cell(image)="row">
               <b-img
+                v-if="row.item.image !== 'https://education.arkanorg.com/assets/image.jpg'"
                 size="1rem"
                 class="mr-1"
                 fluid
                 :src="row.item.image"
               />
+              <span v-else> لا توجد صورة </span>
             </template>
 
             <template #cell(title)="row">
               {{ row.item.title }}
+            </template>
+
+            <template #cell(link)="row">
+              {{ row.item.link }}
             </template>
 
             <template #cell(actions)="row">
@@ -84,7 +93,7 @@
 <script>
 import EditNote from '@/views/admin/notes/EditNote.vue'
 import {
-  BRow, BCol, BTable, BButton, BPagination, BCard, BImg,
+  BRow, BCol, BTable, BButton, BPagination, BCard, BImg, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -100,6 +109,7 @@ export default {
     BTable,
     BButton,
     BImg,
+    BSpinner,
     BPagination,
     EditNote,
   },
@@ -117,6 +127,7 @@ export default {
         { key: 'id', label: 'م' },
         { key: 'image', label: 'صورة' },
         { key: 'title', label: 'عنوان الملاحظة' },
+        { key: 'link', label: 'الرابط' },
         { key: 'actions', label: 'العمليات' },
       ],
       items: [

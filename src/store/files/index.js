@@ -3,27 +3,27 @@ import axios from '@axios'
 export default {
   namespaced: true,
   state: {
-    point: [],
+    files: [],
   },
   getters: {},
   mutations: {
-    SET_RECORD(state, point) {
-      state.point = point
+    SET_RECORD(state, files) {
+      state.files = files
     },
     UPDATE_RECORD(state, data) {
-      const catIndex = state.point.findIndex(cat => cat.id === data.id)
-      Object.assign(state.point[catIndex], data)
+      const catIndex = state.files.findIndex(cat => cat.id === data.id)
+      Object.assign(state.files[catIndex], data)
     },
     REMOVE_RECORD(state, itemId) {
-      const caseIndex = state.point.findIndex(d => d.id === itemId)
-      state.point.splice(caseIndex, 1)
+      const caseIndex = state.files.findIndex(d => d.id === itemId)
+      state.files.splice(caseIndex, 1)
     },
   },
   actions: {
     store(ctx, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('admin/modules/points/create', data)
+          .post('admin/modules/files/create', data)
           .then(res => {
             resolve(res)
           })
@@ -38,7 +38,7 @@ export default {
     fetch({ commit }) {
       return new Promise((resolve, reject) => {
         axios
-          .get('admin/modules/points')
+          .get('admin/modules/files')
           .then(response => {
             commit('SET_RECORD', response.data.data)
             resolve(response)
@@ -49,11 +49,12 @@ export default {
     edit({ commit }, data) {
       return new Promise((resolve, reject) => {
         axios
-          .post('admin/modules/points/update', data)
+          .post('admin/modules/files/update', data)
           .then(res => {
             commit('UPDATE_RECORD', {
               id: res.data.data.id,
-              title: res.data.data.title,
+              name: res.data.data.name,
+              image: res.data.data.image,
             })
             resolve(res)
           })
@@ -61,12 +62,12 @@ export default {
       })
     },
     // eslint-disable-next-line camelcase
-    delete({ commit }, point_id) {
+    delete({ commit }, file_id) {
       return new Promise((resolve, reject) => {
         axios
-          .post('admin/modules/points/delete', { point_id })
+          .post('admin/modules/files/delete', { file_id })
           .then(res => {
-            commit('REMOVE_RECORD', point_id)
+            commit('REMOVE_RECORD', file_id)
             resolve(res)
           })
           .catch(error => reject(error))

@@ -88,7 +88,7 @@
 <script>
 import EditModule from '@/views/admin/modules/EditModule.vue'
 import {
-  BRow, BCol, BTable, BButton, BPagination, BCard, BImg,
+  BRow, BCol, BTable, BButton, BPagination, BCard, BImg, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -104,6 +104,7 @@ export default {
     BTable,
     BButton,
     BImg,
+    BSpinner,
     BPagination,
     EditModule,
   },
@@ -171,8 +172,8 @@ export default {
     // },
     confirmDelete(id) {
       this.$swal({
-        title: 'حذف القسم',
-        text: 'هل تريد حذف القسم',
+        title: 'حذف الموديول',
+        text: 'هل تريد حذف الموديول',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'تاكيد الحذف !',
@@ -184,11 +185,11 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
-          this.$store.dispatch('categories/delete', id).then(() => {
+          this.$store.dispatch('modules/delete', id).then(() => {
             this.$swal({
               icon: 'success',
               title: 'عملية الحذف',
-              text: 'تم حذف القسم بنجاح',
+              text: 'تم حذف الموديول بنجاح',
               customClass: {
                 confirmButton: 'btn btn-success',
               },

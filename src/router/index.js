@@ -74,10 +74,10 @@ const router = new VueRouter({
       meta: {
         authRequired: true,
         role: 'admin',
-        pageTitle: 'إضافة التصنيفات',
+        pageTitle: 'إضافة نشاط',
         breadcrumb: [
           {
-            text: 'إضافة التصنيفات',
+            text: 'إضافة نشاط',
             active: true,
           },
         ],
@@ -90,10 +90,90 @@ const router = new VueRouter({
       meta: {
         authRequired: true,
         role: 'admin',
-        pageTitle: 'التصنيفات',
+        pageTitle: 'الانشطة',
         breadcrumb: [
           {
-            text: 'التصنيفات',
+            text: 'الانشطة',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/add-summary',
+      name: 'add-summary',
+      component: () => import('@/views/admin/modules-content/summary/AddSummary'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'إضافة محتوى',
+        breadcrumb: [
+          {
+            text: 'إضافة المحتوى',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-objectives',
+      name: 'all-objectives',
+      component: () => import('@/views/admin/modules-content/summary/AllObjectives'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'الملخص',
+        breadcrumb: [
+          {
+            text: 'الملخص',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-summary',
+      name: 'all-summary',
+      component: () => import('@/views/admin/modules-content/summary/AllSummary'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'الملخص',
+        breadcrumb: [
+          {
+            text: 'الملخص',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/add-files',
+      name: 'add-files',
+      component: () => import('@/views/admin/modules-content/files/AddFile'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'إضافة ملف',
+        breadcrumb: [
+          {
+            text: 'إضافة ملف',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/all-files',
+      name: 'all-files',
+      component: () => import('@/views/admin/modules-content/files/AllFiles'),
+      meta: {
+        authRequired: true,
+        role: 'admin',
+        pageTitle: 'الملفات',
+        breadcrumb: [
+          {
+            text: 'الملفات',
             active: true,
           },
         ],

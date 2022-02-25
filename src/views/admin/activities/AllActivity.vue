@@ -88,7 +88,7 @@
 <script>
 import EditActivity from '@/views/admin/activities/EditActivity.vue'
 import {
-  BRow, BCol, BTable, BButton, BPagination, BCard, BImg,
+  BRow, BCol, BTable, BButton, BPagination, BCard, BImg, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -104,6 +104,7 @@ export default {
     BTable,
     BButton,
     BImg,
+    BSpinner,
     BPagination,
     EditActivity,
   },

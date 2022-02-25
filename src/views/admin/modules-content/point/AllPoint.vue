@@ -85,14 +85,14 @@
         />
       </div>
     </b-card>
-    <edit-category :obj="Obj" />
+    <edit-point :obj="Obj" />
   </div>
 </template>
 
 <script>
-import EditCategory from '@/views/admin/category/EditCategory.vue'
+import EditPoint from '@/views/admin/modules-content/point/EditPoint.vue'
 import {
-  BRow, BCol, BTable, BButton, BPagination, BCard, BImg,
+  BRow, BCol, BTable, BButton, BPagination, BCard, BImg, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -109,7 +109,8 @@ export default {
     BButton,
     BImg,
     BPagination,
-    EditCategory,
+    BSpinner,
+    EditPoint,
   },
   data() {
     return {
@@ -148,8 +149,8 @@ export default {
   methods: {
     edit(data) {
       this.Obj = data
-      // console.log(this.Obj)
-      this.$bvModal.show('EditCat')
+      console.log(this.Obj)
+      this.$bvModal.show('EditPoint')
     },
 
     confirmDelete(id) {

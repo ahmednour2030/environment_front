@@ -66,12 +66,11 @@ export default {
       })
     },
 
-    // eslint-disable-next-line camelcase
-    delete({ commit }, userId) {
+    delete({ commit }, moduleId) {
       return new Promise((resolve, reject) => {
-        axios.post(`admin/modules/delete/${userId}`)
+        axios.post('admin/modules/delete', { module_id: moduleId })
           .then(res => {
-            commit('REMOVE_RECORD', userId)
+            commit('REMOVE_RECORD', moduleId)
             resolve(res)
           })
           .catch(error => reject(error))

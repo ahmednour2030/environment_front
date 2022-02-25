@@ -28,6 +28,8 @@ export default class JwtService {
       config => {
         // Get token from localStorage
         const accessToken = this.getToken()
+        // eslint-disable-next-line no-param-reassign
+        config.withCredentials = true
 
         // If token is present add it to request's Authorization Header
         if (accessToken) {

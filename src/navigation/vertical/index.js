@@ -49,13 +49,41 @@ export default [
         title: 'إضافة موديول',
         route: 'modulesCreate',
       },
-      {
-        title: 'إضافة محتوى الموديول',
-        route: 'modulesDataCreate',
-      },
+      // {
+      //   title: 'إضافة محتوى الموديول',
+      //   route: 'modulesDataCreate',
+      // },
       {
         title: 'كل الموديولات',
         route: 'modulesIndex',
+      },
+    ],
+  },
+  {
+    title: 'الاهداف والملخص',
+    route: 'second-page',
+    icon: 'BookIcon',
+    role: 'admin',
+    children: [
+      {
+        title: 'إضافة الهدف او الملخص',
+        route: 'add-summary',
+      },
+      {
+        title: 'إضافة الملفات',
+        route: 'add-files',
+      },
+      {
+        title: 'كل الملفات',
+        route: 'all-files',
+      },
+      {
+        title: 'كل الاهداف',
+        route: 'all-objectives',
+      },
+      {
+        title: 'كل الملخصات',
+        route: 'all-summary',
       },
     ],
   },

@@ -73,7 +73,7 @@
               </b-col>
               <b-col md="6">
                 <b-form-group
-                  label="اخر التصنيف"
+                  label="اخر النقطة"
                   label-for="point"
                 >
                   <validation-provider
@@ -84,7 +84,7 @@
                     <b-form-select
                       id="exam"
                       v-model="pointId"
-                      placeholder="اختار التصنيف"
+                      placeholder="اختار النقطة"
                       value-field="id"
                       text-field="title"
                       :options="points"

@@ -3,7 +3,7 @@
     <b-card-group deck>
       <b-card
         header-tag="header"
-        title="إضافة ملاحظة جديد"
+        title="إضافة محتوى جديد"
       >
         <validation-observer ref="categoryRules">
           <b-form>
@@ -11,7 +11,7 @@
               <!-- name -->
               <b-col md="6">
                 <b-form-group
-                  label="عنوان الملاحظة"
+                  label="عنوان الملف"
                   label-for="title"
                 >
                   <validation-provider
@@ -20,62 +20,61 @@
                     rules="required"
                   >
                     <b-form-input
-                      id="title"
+                      id="name"
                       v-model="title"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="عنوان الملاحظة"
+                      placeholder="عنوان الملف"
                     />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
               </b-col>
-
               <b-col md="6">
                 <b-form-group
-                  label="صورة للملاحظة"
-                  label-for="image"
+                  label="اخر الهدف او الملخص"
+                  label-for="moduleId"
                 >
                   <validation-provider
                     #default="{ errors }"
-                    name="image"
-                    rules=""
+                    name="moduleId"
+                    rules="required"
+                  >
+                    <b-form-select
+                      id="moduleId"
+                      v-model="moduleId"
+                      placeholder="اختار الهدف او الملخص"
+                      value-field="id"
+                      text-field="title"
+                      :options="modules"
+                      :state="errors.length > 0 ? false : null"
+                    />
+
+                    <small class="text-danger">{{ errors[0] }}</small>
+                  </validation-provider>
+                </b-form-group>
+              </b-col>
+              <b-col md="12">
+                <b-form-group
+                  label="اختر الملف"
+                  label-for="file"
+                >
+                  <validation-provider
+                    #default="{ errors }"
+                    name="file"
+                    rules="required"
                   >
                     <b-form-file
                       id="image"
-                      v-model="image"
+                      v-model="file"
                       type="image"
                       :state="errors.length > 0 ? false : null"
-                      placeholder="صورة الملاحظة"
+                      placeholder="اختر الملف"
                       @change="fileCategory"
                     />
                     <small class="text-danger">{{ errors[0] }}</small>
                   </validation-provider>
                 </b-form-group>
               </b-col>
-
-              <!-- Points -->
-              <b-col md="12">
-                <b-form-group
-                  label="ملاحظات"
-                  label-for="description"
-                >
-                  <validation-provider
-                    #default="{ errors }"
-                    name="description"
-                    rules="required"
-                  >
-                    <b-form-textarea
-                      id="description"
-                      v-model="description"
-                      :state="errors.length > 0 ? false : null"
-                      placeholder="الرجاء كتابة الملاحظة"
-                      rows="5"
-                    />
-                    <small class="text-danger">{{ errors[0] }}</small>
-                  </validation-provider>
-                </b-form-group>
-              </b-col>
-
               <!-- create button -->
               <b-col cols="12">
                 <b-button
@@ -84,10 +83,15 @@
                   @click.prevent="validationForm"
                 >
                   <feather-icon
+                    v-show="!load"
                     icon="PlusIcon"
                     class="mr-25"
                   />
-                  إضافة ملاحظة
+                  <b-spinner
+                    v-show="load"
+                    small
+                  />
+                  {{ load ? 'جاري تحميل الملف ...' : 'إضافة الملف' }}
                 </b-button>
               </b-col>
             </b-row>
@@ -100,33 +104,34 @@
 
 <script>
 import { ValidationProvider, ValidationObserver, localize } from 'vee-validate'
-import { required } from '@/@core/utils/validations/validations'
+import { required } from '@core/utils/validations/validations'
 import {
   BCard,
   BCardGroup,
   BButton,
   BFormInput,
   BFormGroup,
+  BFormSelect,
+  BFormFile,
+  BSpinner,
   BForm,
   BRow,
   BCol,
-  BFormFile,
-  BFormTextarea,
 } from 'bootstrap-vue'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 const dictionary = {
   ar: {
     names: {
-      title: 'عنوان الملاحظة',
-      description: 'الوصف',
-      image: 'صورة الملاحظة',
+      title: 'عنوان الملف',
+      moduleId: 'الهدف او المحتوي',
+      file: 'الملف',
     },
   },
 }
 localize('ar', dictionary.ar)
 export default {
-  name: 'AddCategory',
+  name: 'AddContent',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -135,83 +140,75 @@ export default {
     BButton,
     BFormInput,
     BFormGroup,
+    BFormSelect,
+    BFormFile,
+    BSpinner,
     BForm,
     BRow,
     BCol,
-    BFormFile,
-    BFormTextarea,
   },
   data() {
     return {
+      load: false,
+      modules: [],
+      moduleId: null,
       category_file: null,
       title: '',
-      description: '',
+      points: '',
       image: null,
+      imageCat: null,
+      file: null,
       required,
     }
   },
-  // computed: {
-  //   rows() {
-  //     // return this.getCategories.length
-  //     return this.items.length
-  //   },
-  //   getCategories() {
-  //     return this.$store.state.categories.categories
-  //   // },
-  // },
   created() {
-    // this.$store.dispatch('categories/fetch').then(cats => {
-    //   this.main = cats.data.data
-    // })
+    this.fetchModules()
   },
   methods: {
     validationForm() {
       const formData = new FormData()
+      formData.append('data_id', this.moduleId)
       formData.append('title', this.title)
-      formData.append('description', this.description)
-
-      if (typeof this.dataImage === 'object') {
-        formData.append('image', this.NoteFile)
-      }
+      formData.append('file', this.category_file)
       this.$refs.categoryRules.validate().then(success => {
         if (success) {
-          this.$store.dispatch('notes/store', formData).then(() => {
-            this.$router.push('/notes')
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة الملاحظة بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
+          this.load = true
+          this.$store.dispatch('files/store', formData).then(res => {
+            this.load = false
+            if (res.status === 200) {
+              this.$router.push('all-files')
+              this.$toast({
+                component: ToastificationContent,
+                props: {
+                  title: 'تم إضافة الملف بنجاح',
+                  icon: 'CheckCircleIcon',
+                  variant: 'success',
+                },
+              })
+            } else {
+              this.$toast({
+                component: ToastificationContent,
+                props: {
+                  title: 'خطا في حفظ الملف',
+                  icon: 'CheckCircleIcon',
+                  variant: 'warning',
+                },
+              })
+            }
+          }).catch(() => {
+            this.load = false
           })
         }
       })
     },
-    validationFormSub() {
-      const formData = new FormData()
-      formData.append('name', this.nameSub)
-      formData.append('category_id', this.mainCatId)
-      this.$refs.simpleRules.validate().then(success => {
-        console.log(formData)
-        if (success) {
-          this.$store.dispatch('subCategories/store', formData).then(() => {
-            this.$toast({
-              component: ToastificationContent,
-              props: {
-                title: 'تم إضافة القسم بنجاح',
-                icon: 'CheckCircleIcon',
-                variant: 'success',
-              },
-            })
-          })
-        }
+    fetchModules() {
+      this.$store.dispatch('modulesData/fetchNames').then(res => {
+        this.modules = res.data.data
       })
     },
     fileCategory(event) {
       // eslint-disable-next-line prefer-destructuring
-      this.NoteFile = event.target.files[0]
+      this.category_file = event.target.files[0]
     },
   },
 }

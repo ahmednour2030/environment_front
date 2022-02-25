@@ -2,7 +2,7 @@
   <div>
     <b-card
       ref="cardAction"
-      title="كافة الأقسام"
+      title="كافة الملخصات"
     >
       <b-row>
         <b-col cols="12">
@@ -13,7 +13,7 @@
             head-variant
             hover
             responsive
-            :items="getCategories"
+            :items="getSummary"
             :busy="isBusy"
             :fields="fields"
             bordered
@@ -29,25 +29,26 @@
             <template #table-busy>
               <div class="text-center text-dark my-2">
                 <b-spinner class="align-middle" />
-                <strong>  جار تحميل البيانات ... </strong>
+                <strong> جار تحميل البيانات ... </strong>
               </div>
             </template>
 
             <template #cell(id)="row">
               {{ row.item.id }}
             </template>
-
-            <template #cell(image)="row">
-              <b-img
-                size="1rem"
-                class="mr-1"
-                fluid
-                :src="row.item.image"
-              />
+            <template #cell(title)="row">
+              {{ row.item.title }}
+            </template>
+            <template #cell(type)="row">
+              {{ row.item.type === 1 ? 'هدف' : 'ملخص' }}
             </template>
 
-            <template #cell(name)="row">
-              {{ row.item.name }}
+            <template #cell(module)="row">
+              {{ row.item.module ? row.item.module.name : '' }}
+            </template>
+
+            <template #cell(category)="row">
+              {{ row.item.category ? row.item.category.name : '' }}
             </template>
 
             <template #cell(actions)="row">
@@ -84,7 +85,7 @@
 <script>
 import EditCategory from '@/views/admin/category/EditCategory.vue'
 import {
-  BRow, BCol, BTable, BButton, BPagination, BCard, BImg, BSpinner,
+  BRow, BCol, BTable, BButton, BPagination, BCard, BSpinner,
 } from 'bootstrap-vue'
 import { faEye, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -92,14 +93,13 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 library.add(faEye, faTrash, faPlus)
 
 export default {
-  name: 'AllCategory',
+  name: 'AllContent',
   components: {
     BCard,
     BRow,
     BCol,
     BTable,
     BButton,
-    BImg,
     BSpinner,
     BPagination,
     EditCategory,
@@ -116,8 +116,10 @@ export default {
       isBusy: true,
       fields: [
         { key: 'id', label: 'م' },
-        { key: 'image', label: 'صورة' },
-        { key: 'name', label: 'الاسم', sortable: true },
+        { key: 'title', label: 'عنوان المحتوى' },
+        { key: 'type', label: 'النوع' },
+        { key: 'module', label: 'اسم الموديول' },
+        { key: 'category', label: 'التصنيف' },
         { key: 'actions', label: 'العمليات' },
       ],
     }
@@ -125,46 +127,27 @@ export default {
   computed: {
     rows() {
       // return this.getCategories.length
-      return this.getCategories.length
+      return this.getSummary.length
     },
-    getCategories() {
+    getSummary() {
       /* eslint-disable no-param-reassign */
-      return this.$store.state.categories.categories
+      return this.$store.state.modulesData.modules
     },
   },
   created() {
-    this.$store.dispatch('categories/fetch').then(() => {
+    this.$store.dispatch('modulesData/fetchSummary').then(() => {
       this.isBusy = false
     })
   },
   methods: {
     edit(data) {
       this.Obj = data
-      // console.log(this.Obj)
       this.$bvModal.show('EditCat')
     },
-    // mapStatus(status) {
-    //   const all = [
-    //     {
-    //       id: 1,
-    //       name: 'فريلانسر',
-    //     },
-    //     {
-    //       id: 2,
-    //       name: 'شركة',
-    //     },
-    //     {
-    //       id: 3,
-    //       name: 'الكل',
-    //     },
-    //   ]
-    //   const item = all.find(x => x.id === parseFloat(status))
-    //   return item ? item.name : ''
-    // },
     confirmDelete(id) {
       this.$swal({
-        title: 'حذف القسم',
-        text: 'هل تريد حذف القسم',
+        title: 'حذف الملخص',
+        text: 'هل تريد حذف الملخص',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'تاكيد الحذف !',
@@ -176,11 +159,11 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
-          this.$store.dispatch('categories/delete', id).then(() => {
+          this.$store.dispatch('modulesData/delete', id).then(() => {
             this.$swal({
               icon: 'success',
               title: 'عملية الحذف',
-              text: 'تم حذف القسم بنجاح',
+              text: 'تم حذف الملخص بنجاح',
               confirmButtonText: 'موافق',
               customClass: {
                 confirmButton: 'btn btn-success',
